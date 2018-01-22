@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+    *{
+    	margin: 0;
+    	padding: 0;
+    	list-style: none;
+    }
+    #box{
+    	width: 600px;
+    	height: 400px;
+    	margin: 30px auto; 
+    	overflow: hidden;
+    	position: relative;
+    }
+    #box img{
+    	width: 600px;
+    	height: 400px;
+    	float: left;
+    }
+    p{
+    	width: 30px;
+    	height: 30px;
+    	background: pink;
+    	position: absolute;
+    	text-align: center;
+    	line-height: 30px;
+    	font-size: 20px;
+    	color: #fff;
+    	font-weight: bold;
+    	border-radius: 5px;
+    }
+    p:nth-child(1){
+    	top:50%;
+    	left:0;
+    	transform: translate(0,-50%);
+    }
+    p:nth-child(2){
+    	top:50%;
+    	right:0;
+    	transform: translate(0,-50%);
+    }
+    ol{
+    	position: absolute;
+    	bottom: 20px;
+    	left:70%;
+    }
+    ol li{
+    	width: 20px;
+    	height: 20px;
+    	background: skyblue;
+    	float: left;
+    	text-align: center;
+    	line-height: 20px;
+    	color: #fff;
+    	margin-left: 10px;
+    	border-radius: 50%;
+    }
+	</style>
+</head>
+<body>
+    <div id="box">
+        <p id="left"><</p>
+        <p id="right">></p>
+    	<div class="pic">
+    		<img src="img/1.jpg" alt="">
+    		<img src="img/2.jpg" alt="">
+    		<img src="img/3.jpg" alt="">
+    		<img src="img/4.jpg" alt="">
+    		<img src="img/5.jpg" alt="">
+    	</div>
+    	<ol>
+    		<li style="background: pink">1</li>
+    		<li>2</li>
+    		<li>3</li>
+    		<li>4</li>
+    		<li>5</li>
+    	</ol>
+    </div>
+	<script src="jquery-1.8.3.min.js"></script>
+	<script>
+		$(function(){
+			var picW = $(".pic img").width();
+			var num = 0,
+			    timer = null,
+			    len = $(".pic img").length;
+			    $(".pic").width(picW*(len+1));
+				$("#left").on("click",function(){
+                    num--;
+                    if(num<0){
+                    	$(".pic img").eq(-1).clone().prependTo(".pic");
+                    	$(".pic").css("margin-left",-picW)
+                    	$(".pic").stop().animate({"margin-left":0},700,function(){
+                            $(".pic").css({"margin-left":-picW*(len-1)});
+                            $(".pic img").eq(0).remove();  
+                    	})
+                        num = len-1;
+                        $("ol li").eq(num).css({"background":"pink"}).siblings().css({"background":""});
+                    }else{
+                    	$(".pic").stop().animate({"margin-left":-picW*num});
+                        $("ol li").eq(num).css({"background":"pink"}).siblings().css({"background":""});   		
+                    }			
+    			})
+				$("#right").on("click",function(){
+					lbt();
+				})
+			
+				function lbt(){
+	                num++;
+	                if(num>$(".pic img").length-1){
+	                    $(".pic img").eq(0).clone().appendTo(".pic");
+	                    $(".pic").stop().animate({"margin-left":-picW*num},function(){
+	                        $(".pic").css({"margin-left":0});
+	                        $(".pic img").eq(-1).remove();  
+	                    });          
+	                    num=0;
+	                    $("ol li").eq(0).css({"background":"pink"}).siblings().css({"background":""});
+	                }else{
+	                    $(".pic").stop().animate({"margin-left":-picW*num});
+	                    $("ol li").eq(num).css({"background":"pink"}).siblings().css({"background":""});
+	                }
+	                
+				}	
+				// timer = setInterval(function(){
+				// 	lbt();
+				// },1000) 	
+				$("#box").on("mouseover",function(){
+					clearInterval(timer);
+				})
+				$("#box").on("mouseout",function(){
+					timer = setInterval(function(){
+		                lbt();
+					},1000)
+				}).trigger("mouseleave")
+		})
+	</script>
+</body>
+</html>
